@@ -1,5 +1,8 @@
 import os
 from dotenv import load_dotenv
+
+from multi_agent_document.controller import multiAgentDocumentRouter
+
 load_dotenv()
 
 from fastapi import FastAPI
@@ -10,6 +13,7 @@ download_model_if_needed()
 
 app = FastAPI()
 app.include_router(singleAgentDocumentRouter)
+app.include_router(multiAgentDocumentRouter)
 
 # 앱 실행
 if __name__ == "__main__":
