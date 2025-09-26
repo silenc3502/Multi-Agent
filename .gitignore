@@ -404,4 +404,17 @@ pyrightconfig.json
 # End of https://www.toptal.com/developers/gitignore/api/pycharm,pycharm+iml,pycharm+all,python
 
 # exclude
+*.pdf
+
+# exclude .env
 .env
+
+# exclude .json
+*.json
+
+# exclude .jinja
+*.jinja
+
+# exclude .model
+*.safetensors
+*.model
