@@ -421,3 +421,12 @@ pyrightconfig.json
 
 # exclude model under directory
 models/
+
+# exclude pdf
+*.pdf
+
+# exclude txt
+*.txt
+
+# exclude donwloaded_docs
+downloaded_docs/
