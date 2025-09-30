@@ -7,3 +7,4 @@ class DocumentType(str, Enum):
     DOCX = "docx"
     HTML = "html"
     XML = "xml"
+    UNKNOWN = "unknown"

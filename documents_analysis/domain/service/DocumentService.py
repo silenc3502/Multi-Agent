@@ -1,28 +1,21 @@
 import uuid
 
-from documents_analysis.domain.entity.document import Document
+from documents_analysis.domain.entity.DocumentType import DocumentType
+from documents_analysis.domain.entity.document import DocumentAnalysisResult
 from documents_analysis.domain.repository.DocumentRepository import DocumentRepository
-from documents_analysis.presentation.api.request.DocumentRequest import DocumentRequest
 from utility.document_downloader import download_document, get_cache_filename
 from utility.document_parser import parse_document
+from utility.file_type_detector import detect_file_type
 
 
 class DocumentService:
     def __init__(self, repository: DocumentRepository):
         self.repository = repository
 
-    async def analyze_and_save(self, request: DocumentRequest):
-        text = await self._load_and_parse_document(request.doc_url)
+    async def create(self, result: DocumentAnalysisResult):
+        return await self.repository.save(result)
 
-        document = Document(
-            id=str(uuid.uuid4()),  # 유니크 ID 생성
-            doc_url=request.doc_url,
-        )
-
-        await self.repository.save(document)
-        return text
-
-    async def _load_and_parse_document(self, doc_url: str) -> str:
+    async def _load_and_parse_document(self, doc_url: str) -> tuple[str, DocumentType]:
         print(f"[DEBUG] 다운로드 시작: {doc_url}")
         content = await download_document(doc_url)
 
@@ -45,5 +38,5 @@ class DocumentService:
             f.write(text)
         print(f"[DEBUG] 파싱된 텍스트 저장: {debug_text_path}")
 
-        return text
-
+        file_type = detect_file_type(doc_url)
+        return text, file_type

@@ -1,16 +1,16 @@
-from dataclasses import dataclass
-from typing import Dict, Optional
-
+from typing import Optional
+from pydantic import BaseModel
 from documents_analysis.domain.entity.DocumentType import DocumentType
 
+class DocumentAnalysisResult(BaseModel):
+    id: str  # UUID
+    doc_url: str
+    file_type: Optional[DocumentType] = None
 
-@dataclass
-class Document:
-    id: str
-    title: Optional[str] = None
-    doc_url: str = ""
-    content: Optional[str] = None
-    doc_type: Optional[DocumentType] = None
-    metadata: Optional[Dict] = None
-    author: Optional[str] = None
-    created_at: Optional[str] = None
+    bullet_summary: Optional[str] = None
+    abstract_summary: Optional[str] = None
+    casual_summary: Optional[str] = None
+    final_summary: Optional[str] = None
+
+    question: Optional[str] = None
+    answer: Optional[str] = None
