@@ -5,10 +5,10 @@ from documents_analysis.domain.service.DocumentService import DocumentService
 from documents_analysis.infrastructure.repository.InMemoryDocumentRepository import InMemoryDocumentRepository
 from documents_analysis.presentation.api.request.DocumentRequest import DocumentRequest
 
-documentRouter = APIRouter()
+documentAnalysisRouter = APIRouter()
 
 
-@documentRouter.post("/document/analyze")
+@documentAnalysisRouter.post("/document/analyze")
 async def analyze_document(request: DocumentRequest):
     repository = InMemoryDocumentRepository()
     service = DocumentService(repository)
