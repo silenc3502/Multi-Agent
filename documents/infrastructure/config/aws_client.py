@@ -5,6 +5,6 @@ from documents.application.usecase.upload_document_usecase import UploadDocument
 
 
 def get_upload_document_usecase():
-    bucket_name = os.getenv("AWS_S3_BUCKET", "my-documents")
+    bucket_name = os.getenv("AWS_S3_BUCKET")
     storage_adapter = S3StorageAdapter(bucket_name)
     return UploadDocumentUseCase(storage_adapter)
