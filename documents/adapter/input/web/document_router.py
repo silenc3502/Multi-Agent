@@ -1,6 +1,6 @@
 from fastapi import APIRouter, UploadFile, File, Depends
 
-from documents.infrastructure.config.aws_client import get_upload_document_usecase
+from documents.application.factory.upload_file_usecase_factory import get_upload_document_usecase
 
 documentRouter = APIRouter()
 

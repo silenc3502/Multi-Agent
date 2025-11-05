@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 
+from documents.infrastructure.config.mysql_config import Base, engine
 from documents.adapter.input.web.document_router import documentRouter
 from documents_analysis.presentation.api.DocumentController import documentAnalysisRouter
 from multi_agent_document.controller import multiAgentDocumentRouter
@@ -28,4 +29,5 @@ if __name__ == "__main__":
     import uvicorn
     host = os.getenv("APP_HOST")
     port = int(os.getenv("APP_PORT"))
+    Base.metadata.create_all(bind=engine)
     uvicorn.run(app, host=host, port=port)
