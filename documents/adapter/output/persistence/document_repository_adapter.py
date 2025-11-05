@@ -18,7 +18,6 @@ class DocumentRepositoryAdapter(DocumentRepositoryPort):
             session.commit()
             session.refresh(doc_record)
 
-            # DB에서 반환받은 id와 uploaded_at을 도메인 모델에 반영
             return Document(
                 id=doc_record.id,
                 metadata=document.metadata,
@@ -32,21 +31,19 @@ class DocumentRepositoryAdapter(DocumentRepositoryPort):
     def find_by_id(self, document_id: int) -> Document | None:
         session = SessionLocal()
         try:
-            doc_record = session.query(DocumentORM).filter(DocumentORM.id == document_id).first()
-            if not doc_record:
+            orm_doc = session.get(DocumentORM, document_id)
+            if orm_doc is None:
                 return None
 
-            filename, ext = doc_record.filename.rsplit('.', 1)
-            metadata = FileMetadata(filename=filename, extension=ext)
-            path = FilePath(s3_url=doc_record.s3_url)
-            size = FileSize(size_in_bytes=0)  # 실제 파일 크기 조회는 필요 시 구현
+            # 임시 FileMetadata는 DB에 없으므로 비워둠
+            metadata = FileMetadata(filename="", extension="")
 
             return Document(
-                id=doc_record.id,
+                id=orm_doc.id,
                 metadata=metadata,
-                path=path,
-                size=size,
-                uploaded_at=doc_record.uploaded_at
+                path=FilePath(s3_url=orm_doc.s3_url),
+                size=FileSize(size_in_bytes=0),  # 여기 수정됨
+                uploaded_at=orm_doc.uploaded_at,
             )
         finally:
             session.close()
