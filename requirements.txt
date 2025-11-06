@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+langchain
+openai
+pdfplumber
+python-docx
+beautifulsoup4
+aiohttp
