@@ -15,7 +15,6 @@ class AnonymousBoardRepositoryImpl(AnonymousBoardRepositoryPort):
         orm_board = AnonymousBoardORM(
             title=board.title,
             content=board.content,
-            author=board.author
         )
         self.db.add(orm_board)
         self.db.commit()
@@ -32,7 +31,6 @@ class AnonymousBoardRepositoryImpl(AnonymousBoardRepositoryPort):
             board = AnonymousBoard(
                 title=orm_board.title,
                 content=orm_board.content,
-                author=orm_board.author
             )
             board.id = orm_board.id
             board.created_at = orm_board.created_at
@@ -47,7 +45,6 @@ class AnonymousBoardRepositoryImpl(AnonymousBoardRepositoryPort):
             board = AnonymousBoard(
                 title=orm_board.title,
                 content=orm_board.content,
-                author=orm_board.author
             )
             board.id = orm_board.id
             board.created_at = orm_board.created_at

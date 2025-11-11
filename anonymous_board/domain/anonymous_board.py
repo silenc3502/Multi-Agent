@@ -2,11 +2,10 @@ from typing import Optional
 from datetime import datetime
 
 class AnonymousBoard:
-    def __init__(self, title: str, content: str, author: Optional[str] = None):
+    def __init__(self, title: str, content: str):
         self.id: Optional[int] = None
         self.title = title
         self.content = content
-        self.author = author
         self.created_at: datetime = datetime.utcnow()
         self.updated_at: datetime = datetime.utcnow()
 

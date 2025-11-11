@@ -8,8 +8,8 @@ class AnonymousBoardUseCase:
     def __init__(self, board_repo: AnonymousBoardRepositoryPort):
         self.board_repo = board_repo
 
-    def create_board(self, title: str, content: str, author: Optional[str] = None) -> AnonymousBoard:
-        board = AnonymousBoard(title=title, content=content, author=author)
+    def create_board(self, title: str, content: str) -> AnonymousBoard:
+        board = AnonymousBoard(title=title, content=content)
         return self.board_repo.save(board)
 
     def get_board(self, board_id: int) -> Optional[AnonymousBoard]:
