@@ -8,8 +8,21 @@ from social_oauth.adapter.input.web.google_oauth2_router import authentication_r
 load_dotenv()
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+origins = [
+    "http://localhost:3000",  # Next.js 프론트 엔드 URL
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,       # 정확한 origin만 허용
+    allow_credentials=True,      # 쿠키 허용
+    allow_methods=["*"],         # 모든 HTTP 메서드 허용
+    allow_headers=["*"],         # 모든 헤더 허용
+)
 
 app.include_router(anonymous_board_router, prefix="/board")
 app.include_router(authentication_router, prefix="/authentication")
