@@ -48,7 +48,7 @@ async def process_google_redirect(
         value=session_id,
         httponly=True,
         secure=False,
-        samesite="none",
+        samesite="lax",
         max_age=3600
     )
     print("[DEBUG] Cookie set in RedirectResponse directly")
