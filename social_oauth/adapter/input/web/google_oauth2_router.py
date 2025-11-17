@@ -24,6 +24,11 @@ async def redirect_to_google():
     return RedirectResponse(url)
 
 
+# Google에게 요청이 날아감.
+# 그런데 Google Cloud에 가서 redirect uri에 설정해 놓은 것이 있음.
+# 로그인이 완료되는 순간 알아서 Google Cloud에 등록한 redirect uri로 날아감
+# 근데 그 주소가 우리는 localhost:33333/authentication/google/redirect 였음.
+# 그렇기 때문에 구글 로그인이 성공하면 아래 Controller (Router)가 동작하게 됨.
 @authentication_router.get("/google/redirect")
 async def process_google_redirect(
     response: Response,
@@ -54,6 +59,7 @@ async def process_google_redirect(
     print("[DEBUG] Session saved in Redis:", redis_client.exists(session_id))
 
     # 브라우저 쿠키 발급
+    # 해당 부분도 .env.local 혹은 .env.production 등으로 관리 되어야 함.
     redirect_response = RedirectResponse("http://localhost:3000")
     redirect_response.set_cookie(
         key="session_id",
