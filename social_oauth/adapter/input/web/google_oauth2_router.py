@@ -2,19 +2,24 @@ import uuid
 from fastapi import APIRouter, Response, Request, Cookie
 from fastapi.responses import RedirectResponse
 
+from account.application.usecase.account_usecase import AccountUseCase
+from account.infrastructure.repository.account_repository_impl import AccountRepositoryImpl
 from config.redis_config import get_redis
 from social_oauth.application.usecase.google_oauth2_usecase import GoogleOAuth2UseCase
 from social_oauth.infrastructure.service.google_oauth2_service import GoogleOAuth2Service
 
 authentication_router = APIRouter()
 service = GoogleOAuth2Service()
-usecase = GoogleOAuth2UseCase(service)
+account_repository = AccountRepositoryImpl()
+account_usecase = AccountUseCase(account_repository)
+google_usecase = GoogleOAuth2UseCase(service)
+
 redis_client = get_redis()
 
 
 @authentication_router.get("/google")
 async def redirect_to_google():
-    url = usecase.get_authorization_url()
+    url = google_usecase.get_authorization_url()
     print("[DEBUG] Redirecting to Google:", url)
     return RedirectResponse(url)
 
@@ -29,9 +34,16 @@ async def process_google_redirect(
     print("code:", code)
     print("state:", state)
 
-    # code -> access token
-    access_token = usecase.login_and_fetch_user(state or "", code)
-    print("[DEBUG] Access token received:", access_token.access_token)
+    result = google_usecase.fetch_user_profile(code, state or "")
+    profile = result["profile"]
+    access_token = result["access_token"]
+    print("profile:", profile)
+
+    # 계정 생성/조회
+    account = account_usecase.create_or_get_account(
+        profile.get("email"),
+        profile.get("name")
+    )
 
     # session_id 생성
     session_id = str(uuid.uuid4())
