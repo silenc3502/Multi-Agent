@@ -1,6 +1,8 @@
-from application.port.board_repository_port import BoardRepositoryPort
-from domain.board import Board
-from infrastructure.orm.board_orm import BoardORM
+from typing import List, Tuple
+
+from board.application.port.board_repository_port import BoardRepositoryPort
+from board.domain.board import Board
+from board.infrastructure.orm.board_orm import BoardORM
 from config.database.session import SessionLocal
 
 class BoardRepositoryImpl(BoardRepositoryPort):
@@ -38,6 +40,23 @@ class BoardRepositoryImpl(BoardRepositoryPort):
     def find_by_author(self, author_id: str):
         orms = self.db.query(BoardORM).filter(BoardORM.author_id == author_id).all()
         return [Board(title=o.title, content=o.content, author_id=o.author_id) for o in orms]
+
+    def find_all(self, page: int, size: int) -> tuple[list[Board], int]:
+        query = self.db.query(BoardORM)
+
+        total = query.count()  # 전체 게시물 수
+
+        orms = query.offset((page - 1) * size).limit(size).all()
+
+        boards = []
+        for o in orms:
+            b = Board(o.title, o.content, o.author_id)
+            b.id = o.id
+            b.created_at = o.created_at
+            b.updated_at = o.updated_at
+            boards.append(b)
+
+        return boards, total
 
     def delete(self, board_id: int):
         orm = self.db.get(BoardORM, board_id)

@@ -1,3 +1,4 @@
+import json
 import uuid
 from fastapi import APIRouter, Response, Request, Cookie
 from fastapi.responses import RedirectResponse
@@ -54,39 +55,57 @@ async def process_google_redirect(
     session_id = str(uuid.uuid4())
     print("[DEBUG] Generated session_id:", session_id)
 
-    # Redis에 session 저장 (1시간 TTL)
-    redis_client.set(session_id, access_token.access_token, ex=3600)
-    print("[DEBUG] Session saved in Redis:", redis_client.exists(session_id))
+    # 4. Redis에 저장 (user_id + access_token)
+    redis_client.set(
+        f"session:{session_id}",
+        json.dumps({
+            "user_id": account.id,
+            "access_token": access_token.access_token  # <-- 객체가 아닌 문자열
+        }),
+        ex=6 * 60 * 60  # 6시간
+    )
 
-    # 브라우저 쿠키 발급
-    # 해당 부분도 .env.local 혹은 .env.production 등으로 관리 되어야 함.
+    # HTTP-only 쿠키 발급
     redirect_response = RedirectResponse("http://localhost:3000")
     redirect_response.set_cookie(
         key="session_id",
         value=session_id,
         httponly=True,
-        secure=False,
+        secure=True,
         samesite="lax",
-        max_age=3600
+        max_age=6 * 60 * 60
     )
+
     print("[DEBUG] Cookie set in RedirectResponse directly")
     return redirect_response
 
 @authentication_router.get("/status")
 async def auth_status(request: Request, session_id: str | None = Cookie(None)):
     print("[DEBUG] /status called")
-
-    # 모든 요청 헤더 출력
     print("[DEBUG] Request headers:", request.headers)
-
-    # 쿠키 확인
     print("[DEBUG] Received session_id cookie:", session_id)
 
     if not session_id:
         print("[DEBUG] No session_id received. Returning logged_in: False")
         return {"logged_in": False}
 
-    exists = redis_client.exists(session_id)
-    print("[DEBUG] Redis has session_id?", exists)
+    # Redis에서 실제 키 확인
+    redis_key = f"session:{session_id}"
+    session_data = redis_client.get(redis_key)
 
-    return {"logged_in": bool(exists)}
+    if not session_data:
+        print("[DEBUG] Session not found in Redis. Returning logged_in: False")
+        return {"logged_in": False}
+
+    # bytes -> str 변환
+    if isinstance(session_data, bytes):
+        session_data = session_data.decode("utf-8")
+
+    # JSON 파싱
+    import json
+    session_dict = json.loads(session_data)
+    user_id = session_dict.get("user_id")
+
+    print("[DEBUG] Session valid. user_id:", user_id)
+    return {"logged_in": True, "user_id": user_id}
+
