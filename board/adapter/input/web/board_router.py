@@ -101,7 +101,7 @@ async def list_boards(page: int = Query(1, ge=1), size: int = Query(10, ge=1)):
     return BoardListResponse.from_boards(boards, nicknames, page, size, total=total)
 
 # 게시글 삭제
-@board_router.delete("/{board_id}")
+@board_router.delete("/delete/{board_id}")
 async def delete_board(board_id: int, user_id: str = Depends(get_current_user)):
     board = board_usecase.get_board(board_id)
     if board.author_id != user_id:

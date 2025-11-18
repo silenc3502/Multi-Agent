@@ -71,7 +71,7 @@ async def process_google_redirect(
         key="session_id",
         value=session_id,
         httponly=True,
-        secure=True,
+        secure=False,
         samesite="lax",
         max_age=6 * 60 * 60
     )
