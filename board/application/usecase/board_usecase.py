@@ -27,3 +27,11 @@ class BoardUsecase:
 
     def delete_board(self, board_id: int):
         self.repository.delete(board_id)
+
+    def update_board(self, board_id: int, title: str, content: str) -> Board:
+        board = self.repository.find_by_id(board_id)
+        if not board:
+            raise ValueError("Board not found")
+
+        board.update(title, content)
+        return self.repository.save(board)

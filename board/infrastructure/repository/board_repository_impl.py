@@ -11,6 +11,7 @@ class BoardRepositoryImpl(BoardRepositoryPort):
 
     def save(self, board: Board) -> Board:
         if board.id is None:
+            # 새 게시글 생성
             orm = BoardORM(
                 title=board.title,
                 content=board.content,
@@ -20,22 +21,35 @@ class BoardRepositoryImpl(BoardRepositoryPort):
             self.db.commit()
             self.db.refresh(orm)
             board.id = orm.id
+            board.created_at = orm.created_at
+            board.updated_at = orm.updated_at
         else:
+            # 기존 게시글 업데이트
             orm = self.db.get(BoardORM, board.id)
+            if orm is None:
+                raise ValueError("Board not found for update")
+
             orm.title = board.title
             orm.content = board.content
             self.db.commit()
+            self.db.refresh(orm)
+            board.updated_at = orm.updated_at
+
         return board
 
-    def find_by_id(self, board_id: int) -> Board:
+    def find_by_id(self, board_id: int) -> Board | None:
         orm = self.db.get(BoardORM, board_id)
         if orm is None:
             return None
-        return Board(
+        board = Board(
             title=orm.title,
             content=orm.content,
             author_id=orm.author_id
         )
+        board.id = orm.id
+        board.created_at = orm.created_at
+        board.updated_at = orm.updated_at
+        return board
 
     def find_by_author(self, author_id: str):
         orms = self.db.query(BoardORM).filter(BoardORM.author_id == author_id).all()

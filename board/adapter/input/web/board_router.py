@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends, Request, Response, Cookie, HTTPException, Query
+from fastapi import APIRouter, Depends, Request, Response, Cookie, HTTPException, Query, Body
 from fastapi.responses import JSONResponse
 
 from account.application.usecase.account_usecase import AccountUseCase
 from account.infrastructure.repository.account_repository_impl import AccountRepositoryImpl
 from board.adapter.input.web.request.create_board_request import CreateBoardRequest
+from board.adapter.input.web.request.update_board_request import UpdateBoardRequest
 from board.adapter.input.web.response.board_list_response import BoardListResponse
 from board.application.usecase.board_usecase import BoardUsecase
 from board.infrastructure.repository.board_repository_impl import BoardRepositoryImpl
@@ -75,13 +76,17 @@ async def get_board(board_id: int):
 
 # 게시글 수정
 @board_router.put("/update/{board_id}")
-async def update_board(board_id: int, title: str, content: str, user_id: str = Depends(get_current_user)):
+async def update_board(
+        board_id: int,
+        request: UpdateBoardRequest = Body(...),
+        user_id: str = Depends(get_current_user)):
+
     board = board_usecase.get_board(board_id)
     if board.author_id != user_id:
         raise HTTPException(status_code=403, detail="Not allowed")
-    board.update(title, content)
-    board_usecase.save(board)
-    return JSONResponse({"id": board.id, "title": board.title, "content": board.content})
+
+    updated_board = board_usecase.update_board(board_id, request.title, request.content)
+    return JSONResponse({"id": updated_board.id, "title": updated_board.title, "content": updated_board.content})
 
 # 내가 쓴 게시글 전체 조회
 @board_router.get("/me")
