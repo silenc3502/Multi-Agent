@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 
 from anonymous_board.adapter.input.web.anonymous_board_router import anonymous_board_router
+from board.adapter.input.web.board_router import board_router
 from config.database.session import Base, engine
 from social_oauth.adapter.input.web.google_oauth2_router import authentication_router
 
@@ -24,8 +25,9 @@ app.add_middleware(
     allow_headers=["*"],         # 모든 헤더 허용
 )
 
-app.include_router(anonymous_board_router, prefix="/board")
+app.include_router(anonymous_board_router, prefix="/anonymouse-board")
 app.include_router(authentication_router, prefix="/authentication")
+app.include_router(board_router, prefix="/board")
 
 # 앱 실행
 if __name__ == "__main__":
