@@ -11,21 +11,15 @@ document_usecase = DocumentUseCase.getInstance()
 from account.adapter.input.web.session_helper import get_current_user
 
 @documents_router.post("/register")
-async def register_document(
-    payload: RegisterDocumentRequest,
-    user_id: int = Depends(get_current_user)
-):
-    doc = document_usecase.register_document(
-        file_name=payload.file_name,
-        s3_key=payload.s3_key,
-        uploader_id=user_id
-    )
-    return JSONResponse({
+async def register_document(payload: RegisterDocumentRequest, user_id: int = Depends(get_current_user)):
+    doc = document_usecase.register_document(payload.file_name, payload.s3_key, user_id)
+    return {
         "id": doc.id,
         "file_name": doc.file_name,
         "s3_key": doc.s3_key,
-        "uploader_id": doc.uploader_id
-    })
+        "uploader_id": doc.uploader_id,
+    }
+
 @documents_router.get("/list")
 async def list_documents():
     return document_usecase.list_documents()

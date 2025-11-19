@@ -25,4 +25,4 @@ class DocumentUseCase:
         return self.repository.save(doc)
 
     def list_documents(self) -> List[Document]:
-        return self.repository.list_all()
+        return self.repository.find_all()

@@ -12,15 +12,6 @@ class Document:
 
     @classmethod
     def create(cls, file_name: str, s3_key: str, uploader_id: int) -> "Document":
-        if not file_name:
-            raise ValueError("File name cannot be empty")
-        if not s3_key:
-            raise ValueError("S3 key cannot be empty")
+        if not file_name or not s3_key:
+            raise ValueError("file_name과 s3_key는 필수입니다")
         return cls(file_name, s3_key, uploader_id)
-
-    def update(self, file_name: str, s3_key: str):
-        if file_name:
-            self.file_name = file_name
-        if s3_key:
-            self.s3_key = s3_key
-        self.updated_at = datetime.utcnow()
