@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, Request, Response, Cookie, HTTPException, Query, Body
 from fastapi.responses import JSONResponse
 
+from account.adapter.input.web.session_helper import get_current_user
 from account.application.usecase.account_usecase import AccountUseCase
 from account.infrastructure.repository.account_repository_impl import AccountRepositoryImpl
 from board.adapter.input.web.request.create_board_request import CreateBoardRequest
@@ -8,7 +9,6 @@ from board.adapter.input.web.request.update_board_request import UpdateBoardRequ
 from board.adapter.input.web.response.board_list_response import BoardListResponse
 from board.application.usecase.board_usecase import BoardUsecase
 from board.infrastructure.repository.board_repository_impl import BoardRepositoryImpl
-from social_oauth.adapter.input.web.google_oauth2_router import redis_client
 
 board_router = APIRouter(tags=["board"])
 board_repository_impl = BoardRepositoryImpl()
@@ -18,31 +18,7 @@ account_repository_impl = AccountRepositoryImpl()
 account_usecase = AccountUseCase(account_repository_impl)
 
 # 세션으로 사용자 확인
-import json
-from fastapi import HTTPException, Cookie
-
-def get_current_user(session_id: str = Cookie(None)) -> int:
-    if not session_id:
-        raise HTTPException(status_code=401, detail="No session_id")
-
-    redis_key = f"session:{session_id}"
-    user_data_bytes = redis_client.get(redis_key)
-    if not user_data_bytes:
-        raise HTTPException(status_code=401, detail="Invalid session")
-
-    # bytes -> str -> dict
-    if isinstance(user_data_bytes, bytes):
-        user_data_str = user_data_bytes.decode("utf-8")
-    else:
-        user_data_str = str(user_data_bytes)
-
-    try:
-        user_data = json.loads(user_data_str)
-        user_id = int(user_data["user_id"])
-    except (KeyError, ValueError, json.JSONDecodeError):
-        raise HTTPException(status_code=401, detail="Invalid session data")
-
-    return user_id
+from fastapi import HTTPException
 
 # 게시글 생성
 @board_router.post("/create")
