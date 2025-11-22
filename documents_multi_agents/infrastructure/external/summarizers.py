@@ -14,9 +14,7 @@ def deduplicate_sentences(text: str) -> str:
             result.append(s_clean)
     return " ".join(result)
 
-# =====================
 # 텍스트 정제
-# =====================
 def clean_text(text: str) -> str:
     text = re.sub(r'\d+', '', text)  # 숫자 제거
     # Latin/Test 문구 제거
@@ -29,9 +27,7 @@ def clean_text(text: str) -> str:
     # 연속 공백 제거
     return re.sub(r'\s+', ' ', text).strip()
 
-# =====================
 # 문장 단위 청킹
-# =====================
 def chunk_text(text: str, max_chars: int = 1000):
     text = clean_text(text)
     if not text:
@@ -57,15 +53,11 @@ def chunk_text(text: str, max_chars: int = 1000):
 
     return chunks
 
-# =====================
 # 모델 로드
-# =====================
 summarizer = pipeline("summarization", model="facebook/bart-large-cnn", device=-1)
 qa_model = pipeline("text2text-generation", model="google/flan-t5-large", device=-1)
 
-# =====================
 # 안전한 모델 호출
-# =====================
 async def run_summarize(text: str, max_len: int, min_len: int):
     return await asyncio.to_thread(
         lambda: summarizer(text, max_length=max_len, min_length=min_len, truncation=True)[0]["summary_text"]
@@ -76,9 +68,7 @@ async def run_qa(prompt: str):
         lambda: qa_model(prompt, max_new_tokens=150)[0]["generated_text"]
     )
 
-# =====================
 # 계층 요약
-# =====================
 async def safe_summarizer(text: str, max_len: int, min_len: int):
     chunks = chunk_text(text, 1000)
     lvl1 = [await run_summarize(c, max_len, min_len) for c in chunks]
@@ -90,9 +80,7 @@ async def safe_summarizer(text: str, max_len: int, min_len: int):
         combined = " ".join(lvl2)
     return deduplicate_sentences(combined)
 
-# =====================
 # 요약 타입
-# =====================
 async def bullet_summarizer(text):   return await safe_summarizer(text, 180, 40)
 async def abstract_summarizer(text): return await safe_summarizer(text, 250, 80)
 async def casual_summarizer(text):   return await safe_summarizer(text, 180, 40)
@@ -100,9 +88,7 @@ async def consensus_summarizer(lst):
     joined = " ".join([s for s in lst if s])
     return await safe_summarizer(joined, 200, 60)
 
-# =====================
 # QA
-# =====================
 async def answer_agent(summary: str, question: str):
     prompt_template = f"""
 Context:
