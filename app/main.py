@@ -10,6 +10,9 @@ from social_oauth.adapter.input.web.google_oauth2_router import authentication_r
 
 load_dotenv()
 
+os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
+os.environ["TORCH_USE_CUDA_DSA"] = "1"
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
