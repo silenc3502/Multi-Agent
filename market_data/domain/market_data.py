@@ -1,6 +1,8 @@
-from .entity.market_item import MarketItem
 from datetime import datetime
 from typing import List
+
+from market_data.domain.market_item import MarketItem
+
 
 class MarketData:
     def __init__(self, items: List[MarketItem], source: str, fetched_at: datetime):
