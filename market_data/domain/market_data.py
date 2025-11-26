@@ -1,11 +1,11 @@
 from datetime import datetime
 from typing import List
-
-from market_data.domain.market_item import MarketItem
-
+from .market_item import MarketItem
+from .value_object.market_source import MarketSource
+from .value_object.timestamp import Timestamp
 
 class MarketData:
-    def __init__(self, items: List[MarketItem], source: str, fetched_at: datetime):
+    def __init__(self, items: List[MarketItem], source: MarketSource, fetched_at: Timestamp):
         self.items = items
         self.source = source
         self.fetched_at = fetched_at
