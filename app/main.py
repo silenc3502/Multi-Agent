@@ -8,6 +8,7 @@ from documents.adapter.input.web.documents_router import documents_router
 from documents_openai.adapter.input.web.documents_openai_router import documents_openai_router
 
 from documents_multi_agents.adapter.input.web.document_multi_agent_router import documents_multi_agents_router
+from market_data.adapter.input.web.market_data_router import market_data_router
 from social_oauth.adapter.input.web.google_oauth2_router import authentication_router
 
 load_dotenv()
@@ -38,6 +39,7 @@ app.include_router(board_router, prefix="/board")
 app.include_router(documents_router, prefix="/documents")
 app.include_router(documents_multi_agents_router, prefix="/documents-multi-agents")
 app.include_router(documents_openai_router, prefix="/documents-openai")
+app.include_router(market_data_router, prefix="/market-data")
 
 # 앱 실행
 if __name__ == "__main__":
