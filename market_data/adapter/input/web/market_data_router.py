@@ -8,10 +8,10 @@ market_data_router = APIRouter(tags=["market_data"])
 async def fetch_market_data(query: str):
     usecase = FetchMarketDataUsecaseFactory.create()
     result = await usecase.execute(query)
-    # 단순 직렬화
+
     return {
         "source": result.source,
-        "fetched_at": result.fetched_at.isoformat(),
+        "fetched_at": result.fetched_at.timestamp.isoformat(),
         "items": [
             {
                 "name": item.name,
