@@ -17,6 +17,7 @@ class NaverMarketDataAdapter:
         from market_data.domain.value_object.timestamp import Timestamp
         items: List[MarketItem] = [
             MarketItem(
+                product_id=item.get("productId", ""),
                 name=item.get("title", ""),
                 price=MarketPrice(float(item.get("lprice", 0))),
                 timestamp=Timestamp(datetime.now())
