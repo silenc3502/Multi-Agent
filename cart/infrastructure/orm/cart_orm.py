@@ -1,6 +1,9 @@
-from sqlalchemy import Column, Integer, DateTime
 from datetime import datetime
+
+from sqlalchemy import Column, Integer, DateTime
+
 from config.database.session import Base
+
 
 class CartORM(Base):
     __tablename__ = "cart"

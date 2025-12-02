@@ -11,7 +11,7 @@ class CartRepositoryImpl(CartRepositoryPort):
 
     def save(self, cart: Cart) -> Cart:
         if cart.id is None:
-            orm = CartORM(account_id=cart.account_id)
+            orm = CartORM(account_id=cart.user_id)
             self.db.add(orm)
             self.db.commit()
             self.db.refresh(orm)

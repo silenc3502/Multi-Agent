@@ -48,6 +48,6 @@ if __name__ == "__main__":
     import uvicorn
     host = os.getenv("APP_HOST")
     port = int(os.getenv("APP_PORT"))
-    # Base.metadata.drop_all(bind=engine)
+    Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
     uvicorn.run(app, host=host, port=port)

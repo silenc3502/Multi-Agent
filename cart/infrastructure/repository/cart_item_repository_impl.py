@@ -15,14 +15,28 @@ class CartItemRepositoryImpl(CartItemRepositoryPort):
         orm = CartItemORM(
             cart_id=item.cart_id,
             product_id=item.product_id,
+            name=item.name,
             quantity=item.quantity,
-            price=item.price.amount
+            price=item.price.value
         )
         self.db.add(orm)
         self.db.commit()
         self.db.refresh(orm)
 
         item.id = orm.id
+        return item
+
+    def update(self, item: CartItem) -> CartItem:
+        orm = self.db.get(CartItemORM, item.id)
+        if not orm:
+            raise ValueError(f"CartItem not found: id={item.id}")
+
+        orm.quantity = item.quantity
+        orm.price = item.price.value
+        orm.name = item.name
+
+        self.db.commit()
+        self.db.refresh(orm)
         return item
 
     def find_by_cart_id(self, cart_id: int) -> List[CartItem]:
@@ -33,6 +47,7 @@ class CartItemRepositoryImpl(CartItemRepositoryPort):
             item = CartItem(
                 cart_id=o.cart_id,
                 product_id=o.product_id,
+                name=o.name,
                 quantity=o.quantity,
                 price=Price(o.price)
             )

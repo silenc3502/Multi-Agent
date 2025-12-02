@@ -1,25 +1,23 @@
-from typing import List, Optional
 from datetime import datetime
-
+from typing import List, Optional
 from cart.domain.cart_item import CartItem
 
-
 class Cart:
-    def __init__(self, user_id: str):
+    def __init__(
+        self,
+        user_id: int,
+        id: Optional[int] = None,
+        items: Optional[List[CartItem]] = None,
+        created_at: Optional[datetime] = None,
+        updated_at: Optional[datetime] = None,
+    ):
+        self.id = id
         self.user_id = user_id
-        self.items: List[CartItem] = []
-        self.created_at: datetime = datetime.utcnow()
-        self.updated_at: datetime = datetime.utcnow()
-
-    @classmethod
-    def create(cls, user_id: str) -> "Cart":
-        if not user_id:
-            raise ValueError("User ID cannot be empty")
-        return cls(user_id)
+        self.items = items or []
+        self.created_at = created_at or datetime.utcnow()
+        self.updated_at = updated_at or datetime.utcnow()
 
     def add_item(self, item: CartItem):
-        # 실제 시스템은 중복 처리(동일 상품이면 수량 합침) 등을 여기에 둠
-        # 간단히 동일 product_id이면 quantity 증가
         for existing in self.items:
             if existing.product_id == item.product_id:
                 existing.quantity += item.quantity
@@ -34,6 +32,7 @@ class Cart:
 
     def to_dict(self):
         return {
+            "id": self.id,
             "user_id": self.user_id,
             "created_at": self.created_at.isoformat(),
             "updated_at": self.updated_at.isoformat(),
