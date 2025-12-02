@@ -14,6 +14,7 @@ async def fetch_market_data(query: str):
         "fetched_at": result.fetched_at.timestamp.isoformat(),
         "items": [
             {
+                "product_id": item.product_id,
                 "name": item.name,
                 "price": item.price.value,
                 "currency": item.price.currency,

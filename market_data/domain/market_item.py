@@ -3,7 +3,8 @@ from market_data.domain.value_object.timestamp import Timestamp
 
 
 class MarketItem:
-    def __init__(self, name: str, price: MarketPrice, timestamp: Timestamp):
+    def __init__(self, product_id: str, name: str, price: MarketPrice, timestamp: Timestamp):
+        self.product_id = product_id
         self.name = name
         self.price = price
         self.timestamp = timestamp

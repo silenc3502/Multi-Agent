@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Depends, Request, Response, Cookie, HTTPException, Query, Body
+from fastapi import APIRouter, Depends, Query, Body
 from fastapi.responses import JSONResponse
 
-from account.adapter.input.web.session_helper import get_current_user
+from utility.session_helper import get_current_user
 from account.application.usecase.account_usecase import AccountUseCase
 from account.infrastructure.repository.account_repository_impl import AccountRepositoryImpl
 from board.adapter.input.web.request.create_board_request import CreateBoardRequest

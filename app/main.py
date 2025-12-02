@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 
 from anonymous_board.adapter.input.web.anonymous_board_router import anonymous_board_router
 from board.adapter.input.web.board_router import board_router
+from cart.adapter.input.web.cart_router import cart_router
 from config.database.session import Base, engine
 from documents.adapter.input.web.documents_router import documents_router
 from documents_openai.adapter.input.web.documents_openai_router import documents_openai_router
@@ -40,12 +41,13 @@ app.include_router(documents_router, prefix="/documents")
 app.include_router(documents_multi_agents_router, prefix="/documents-multi-agents")
 app.include_router(documents_openai_router, prefix="/documents-openai")
 app.include_router(market_data_router, prefix="/market-data")
+app.include_router(cart_router, prefix="/cart")
 
 # 앱 실행
 if __name__ == "__main__":
     import uvicorn
     host = os.getenv("APP_HOST")
     port = int(os.getenv("APP_PORT"))
-    # Base.metadata.drop_all(bind=engine)
+    Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
     uvicorn.run(app, host=host, port=port)

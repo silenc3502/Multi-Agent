@@ -1,5 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, Depends
 
 from documents.adapter.input.web.request.register_document_request import RegisterDocumentRequest
 from documents.application.usecase.document_usecase import DocumentUseCase
@@ -8,7 +7,7 @@ documents_router = APIRouter(tags=["documents"])
 
 document_usecase = DocumentUseCase.getInstance()
 
-from account.adapter.input.web.session_helper import get_current_user
+from utility.session_helper import get_current_user
 
 @documents_router.post("/register")
 async def register_document(payload: RegisterDocumentRequest, user_id: int = Depends(get_current_user)):

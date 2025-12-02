@@ -11,9 +11,18 @@ class NaverShoppingClient:
             "X-Naver-Client-Id": self.NAVER_CLIENT_ID,
             "X-Naver-Client-Secret": self.NAVER_CLIENT_SECRET,
         }
+
         async with aiohttp.ClientSession() as session:
             async with session.get(url, headers=headers) as resp:
                 if resp.status != 200:
                     raise Exception(f"Naver API Error {resp.status}")
                 data = await resp.json()
-        return data.get("items", [])
+
+        items = data.get("items", [])
+
+        print(f"--- Naver API search result for '{query}' ---")
+        for i, item in enumerate(items, start=1):
+            print(f"[{i}] {item}")
+        print("--- End of result ---")
+
+        return items
