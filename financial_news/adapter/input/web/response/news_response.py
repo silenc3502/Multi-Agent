@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Union
 from pydantic import BaseModel, Field
 
 from financial_news.domain.entity.news import News
@@ -13,7 +13,7 @@ class NewsResponse(BaseModel):
     id: str = Field(..., description="뉴스 ID")
     title: str = Field(..., description="뉴스 제목")
     content: str = Field(..., description="뉴스 본문")
-    source: str = Field(..., description="뉴스 출처")
+    source: Union[str, dict] = Field(..., description="뉴스 출처")
     published_at: datetime = Field(..., description="발행 시각")
     url: Optional[str] = Field(None, description="원문 URL")
     symbols: List[str] = Field(default_factory=list, description="관련 주식 심볼")

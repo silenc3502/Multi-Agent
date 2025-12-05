@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from financial_news.domain.value_objects.news_id import NewsId
 from financial_news.domain.value_objects.sentiment_score import SentimentScore
@@ -12,7 +12,7 @@ class News:
     id: NewsId
     title: str
     content: str
-    source: str
+    source: Union[str, dict]  # str 또는 dict(JSON) 모두 허용
     published_at: datetime
     url: str
     symbols: List[StockSymbol] = field(default_factory=list)
@@ -20,6 +20,7 @@ class News:
     categories: List[str] = field(default_factory=list)
     keywords: List[str] = field(default_factory=list)
     created_at: datetime = field(default_factory=datetime.utcnow)
+    updated_at: datetime = field(default_factory=datetime.utcnow)  # 추가
 
     def is_relevant_to_symbol(self, symbol: StockSymbol) -> bool:
         """특정 심볼과 관련이 있는지 확인"""

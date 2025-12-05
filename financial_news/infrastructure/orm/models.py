@@ -11,13 +11,13 @@ class NewsModel(Base):
 
     id = Column(String(50), primary_key=True)
     title = Column(String(500), nullable=False, index=True)
-    content = Column(Text, nullable=False)
-    source = Column(String(100), nullable=False)
+    content = Column(Text, nullable=False)  # 뉴스 내용 길이 길 수 있음
+    source = Column(Text, nullable=False)  # dict(JSON) 저장 가능
     published_at = Column(DateTime, nullable=False, index=True)
     url = Column(String(1000))
     symbols = Column(String(500), index=True)  # 콤마로 구분된 심볼
     categories = Column(String(500))
-    keywords = Column(Text)
+    keywords = Column(Text)  # 길이 길어질 수 있음
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
