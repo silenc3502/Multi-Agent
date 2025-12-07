@@ -1,7 +1,7 @@
+FROM python:3.13-slim
+
 ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh /
 RUN chmod +x /wait-for-it.sh
-
-FROM python:3.13-slim
 
 # 컨테이너 작업 디렉토리
 WORKDIR /app
