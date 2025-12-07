@@ -14,7 +14,7 @@ from kakao_authentication.adapter.input.web.kakao_authentication_router import k
 from market_data.adapter.input.web.market_data_router import market_data_router
 from social_oauth.adapter.input.web.google_oauth2_router import authentication_router
 
-from financial_news.infrastructure.orm.models import Base
+# from financial_news.infrastructure.orm.models import Base
 
 load_dotenv()
 
