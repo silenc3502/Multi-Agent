@@ -26,9 +26,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-origins = [
-    "http://localhost:3000",  # Next.js 프론트 엔드 URL
-]
+frontend_url = os.getenv("CORS_ALLOWED_FRONTEND_URL")
+origins = [frontend_url]
 
 app.add_middleware(
     CORSMiddleware,
