@@ -10,6 +10,7 @@ from documents_openai.adapter.input.web.documents_openai_router import documents
 
 # from documents_multi_agents.adapter.input.web.document_multi_agent_router import documents_multi_agents_router
 from financial_news.adapter.input.web.financial_news_router import financial_news_router
+from kakao_authentication.adapter.input.web.kakao_authentication_router import kakao_authentication_router
 from market_data.adapter.input.web.market_data_router import market_data_router
 from social_oauth.adapter.input.web.google_oauth2_router import authentication_router
 
@@ -46,6 +47,7 @@ app.include_router(documents_openai_router, prefix="/documents-openai")
 app.include_router(market_data_router, prefix="/market-data")
 app.include_router(cart_router, prefix="/cart")
 app.include_router(financial_news_router, prefix="/financial-news")
+app.include_router(kakao_authentication_router, prefix="/kakao-authentication")
 
 # 앱 실행
 if __name__ == "__main__":
