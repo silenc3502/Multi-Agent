@@ -3,10 +3,10 @@ version: "3.9"
 services:
   # 1. FastAPI 앱
   fastapi:
-    build: .
+    image: ghcr.io/${REPO_USER}/fastapi-app:latest
     container_name: fastapi_app
     ports:
-      - "33333:33333"
+      - "33333:33333"  # 호스트 33333 -> 컨테이너 33333
     env_file:
       - .env
     depends_on:
