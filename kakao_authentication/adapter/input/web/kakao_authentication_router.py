@@ -1,4 +1,5 @@
 import json
+import os
 import uuid
 from fastapi import APIRouter, Response, Request, Cookie
 from fastapi.responses import RedirectResponse
@@ -19,6 +20,8 @@ account_repository = AccountRepositoryImpl()
 account_usecase = AccountUseCase(account_repository)
 
 redis_client = get_redis()
+
+CORS_ALLOWED_FRONTEND_URL = os.getenv("CORS_ALLOWED_FRONTEND_URL")
 
 
 @kakao_authentication_router.get("/login")
@@ -62,7 +65,7 @@ async def kakao_redirect(code: str):
     )
 
     # HTTP Only 쿠키 발급
-    response = RedirectResponse("http://localhost:3000")
+    response = RedirectResponse(CORS_ALLOWED_FRONTEND_URL)
 
     response.set_cookie(
         key="session_id",
