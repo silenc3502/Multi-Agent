@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 
 from anonymous_board.adapter.input.web.anonymous_board_router import anonymous_board_router
+from ask.adapter.input.web.ask_router import ask_router
 from board.adapter.input.web.board_router import board_router
 from cart.adapter.input.web.cart_router import cart_router
 from config.database.session import Base, engine
@@ -49,6 +50,7 @@ app.include_router(cart_router, prefix="/cart")
 app.include_router(financial_news_router, prefix="/financial-news")
 app.include_router(kakao_authentication_router, prefix="/kakao-authentication")
 app.include_router(mbti_analysis_router, prefix="/mbti-analysis")
+app.include_router(ask_router, prefix="/user-ask")
 
 # 앱 실행
 if __name__ == "__main__":
