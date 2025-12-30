@@ -1,9 +1,7 @@
 import sys
 from unittest.mock import Mock, patch
 
-# ------------------------
 # FastAPI, DB, Redis 등 모든 의존성 Mock
-# ------------------------
 sys.modules["fastapi"] = Mock()
 sys.modules["fastapi.responses"] = Mock()
 sys.modules["fastapi.testclient"] = Mock()
