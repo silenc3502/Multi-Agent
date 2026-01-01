@@ -1,4 +1,6 @@
 import os
+import sys
+
 from dotenv import load_dotenv
 
 from anonymous_board.adapter.input.web.anonymous_board_router import anonymous_board_router
@@ -6,11 +8,13 @@ from ask.adapter.input.web.ask_router import ask_router
 from board.adapter.input.web.board_router import board_router
 from cart.adapter.input.web.cart_router import cart_router
 from config.database.session import Base, engine
+from config.fastapi_config import init_fastapi_lifespan
 # from documents.adapter.input.web.documents_router import documents_router
 from documents_openai.adapter.input.web.documents_openai_router import documents_openai_router
 
 # from documents_multi_agents.adapter.input.web.document_multi_agent_router import documents_multi_agents_router
 from financial_news.adapter.input.web.financial_news_router import financial_news_router
+from grpc_fastapi_hello.adapter.input.web.grpc_hello_router import grpc_hello_router
 from kakao_authentication.adapter.input.web.kakao_authentication_router import kakao_authentication_router
 from market_data.adapter.input.web.market_data_router import market_data_router
 from mbti_analysis.adapter.input.web.mbti_analysis_router import mbti_analysis_router
@@ -23,10 +27,12 @@ load_dotenv()
 # os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
 # os.environ["TORCH_USE_CUDA_DSA"] = "1"
 
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-app = FastAPI()
+app = FastAPI(lifespan=init_fastapi_lifespan)
 
 frontend_url = os.getenv("CORS_ALLOWED_FRONTEND_URL")
 origins = [frontend_url]
@@ -51,6 +57,7 @@ app.include_router(financial_news_router, prefix="/financial-news")
 app.include_router(kakao_authentication_router, prefix="/kakao-authentication")
 app.include_router(mbti_analysis_router, prefix="/mbti-analysis")
 app.include_router(ask_router, prefix="/user-ask")
+app.include_router(grpc_hello_router, prefix="/grpc")
 
 # 앱 실행
 if __name__ == "__main__":

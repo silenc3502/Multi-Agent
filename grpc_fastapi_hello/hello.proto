@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package hello;
+
+service HelloService {
+  rpc SayHello (HelloRequest) returns (HelloResponse);
+}
+
+message HelloRequest {
+  string name = 1;
+}
+
+message HelloResponse {
+  string message = 1;
+}
+
+// cd 프로젝트루트
+// python -m grpc_tools.protoc \
+//  -I grpc_fastapi_hello \
+//  --python_out=. \
+//  --grpc_python_out=. \
+//  grpc_fastapi_hello/hello.proto
